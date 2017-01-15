@@ -1,0 +1,1 @@
+#include "WCWordExtractor.h"
