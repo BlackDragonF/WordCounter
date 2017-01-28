@@ -3,7 +3,10 @@
 
 typedef enum WCError {
     WCNoneError = 0,
-    WCMemoryOverflowError = 100,
+    WCNullPointerError = 100,
+    WCMemoryOverflowError,
+
+    WCIndexRangeError = 200,
 }WCError;
 
 

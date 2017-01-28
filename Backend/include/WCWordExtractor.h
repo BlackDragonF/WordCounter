@@ -1,16 +1,18 @@
 #ifndef WC_WORD_EXTRACTOR_H
 #define WC_WORD_EXTRACTOR_H
-/* Include necessary stardard libraries */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#define WC_WORD_EXTRACTOR_BUFFER_SIZE (400)
+#define WC_CHAR_BUFFER_SIZE (400)
 
+struct WCWordExtractor;
+typedef struct WCWordExtractor WCWordExtractor;
 
-
-
-
+WCWordExtractor * wc_word_extractor_create_with_file(FILE * fp, WCError * error);
+void wc_word_extractor_destroy(WCWordExtractor * extractor, WCError * error);
+WCWord * wc_word_extractor_next_word(WCWordExtractor * extractor, WCError * error);
 
 
 #endif

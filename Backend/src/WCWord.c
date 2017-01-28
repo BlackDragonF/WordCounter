@@ -8,7 +8,23 @@ struct WCWord {
 };
 
 static void wc_word_expand_capacity(WCWord * word, int increment, WCError * error) {
-
+    if (word == NULL) {
+        *error = WCNullPointerError;
+        return;
+    }
+    if (increment <= 0) {
+        *error = WCIndexRangeError;
+        return;
+    }
+    char * temp = realloc(word->word, sizeof(char) * (word->capacity + increment));
+    if (temp == NULL) {
+        *error = WCMemoryOverflowError;
+        return;
+    }
+    word->word = temp;
+    memset(word->word + word->capacity, 0, increment);
+    word->capacity += increment;
+    *error = WCNoneError;
 }
 
 WCWord * wc_word_create(int capacity, WCError * error) {
@@ -18,6 +34,11 @@ WCWord * wc_word_create(int capacity, WCError * error) {
         return NULL;
     }
     word->length = 0;
+    if (capacity <= 0) {
+        *error = WCIndexRangeError;
+        free(word);
+        return NULL;
+    }
     word->capacity = capacity;
     word->word = malloc(sizeof(char) * capacity);
     if (word->word == NULL) {
@@ -31,12 +52,20 @@ WCWord * wc_word_create(int capacity, WCError * error) {
 }
 
 void wc_word_clean(WCWord * word, WCError * error) {
+    if (word == NULL) {
+        *error = WCNullPointerError;
+        return;
+    }
     memset(word->word, 0, word->capacity);
     word->length = 0;
     *error = WCNoneError;
 }
 
 void wc_word_destroy(WCWord * word, WCError * error) {
+    if (word == NULL) {
+        *error = WCNullPointerError;
+        return;
+    }
     free(word->word);
     free(word);
     *error = WCNoneError;
@@ -44,7 +73,12 @@ void wc_word_destroy(WCWord * word, WCError * error) {
 
 void wc_character_expand(WCWord * word, char character, WCError * error) {
     if (word->length >= word->capacity - 1) {
-        
+        WCError newError;
+        wc_word_expand_capacity(word, WC_WORD_LENGTH_INCREMENT, &newError);
+        if (newError) {
+            printf("Fetal: Failed to alloc memory for WCWord.\n");
+            exit(newError);
+        }
     }
     (word->word)[word->length] = character;
     (word->length)++;
@@ -52,6 +86,26 @@ void wc_character_expand(WCWord * word, char character, WCError * error) {
 }
 
 const char * wc_word_get_word(WCWord * word, WCError * error) {
+    if (word == NULL) {
+        *error = WCNullPointerError;
+        return NULL;
+    }
     *error = WCNoneError;
     return word->word;
+}
+
+void wc_word_set_word(WCWord * wc_word, char * word, WCError * error) {
+    if (word == NULL || wc_word == NULL) {
+        *error = WCNullPointerError;
+        return;
+    }
+    WCError newError;
+    if (strlen(word) + 1 > wc_word->length) {
+        wc_word_expand_capacity(wc_word, strlen(word) + 1 - wc_word->length, &newError);
+        if (newError) {
+            exit(newError);
+        }
+    }
+    strcpy(wc_word, word);
+    *error = WCNoneError;
 }

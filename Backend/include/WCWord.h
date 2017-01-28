@@ -16,5 +16,5 @@ void wc_word_clean(WCWord * word, WCError * error);
 void wc_word_destroy(WCWord * word, WCError * error);
 void wc_character_expand(WCWord * word, char character, WCError * error);
 const char * wc_word_get_word(WCWord * word, WCError * error);
-
+void wc_word_set_word(WCWord * wc_word, char * word, WCError * error);
 #endif
