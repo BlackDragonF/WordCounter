@@ -6,6 +6,7 @@
 #include <string.h>
 
 #include "WCindex.h"
+#include "WCErrorHandler.h"
 
 #define WC_DEFAULT_WORD_LENGTH (20)
 #define WC_WORD_LENGTH_INCREMENT (10)

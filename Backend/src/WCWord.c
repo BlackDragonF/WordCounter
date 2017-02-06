@@ -1,5 +1,4 @@
 #include "WCWord.h"
-#include "WCErrorHandler.h"
 
 struct WCWord {
     int length;
@@ -102,12 +101,12 @@ void wc_word_set_word(WCWord * wc_word, char * word, WCError * error) {
     }
     WCError newError;
     if (strlen(word) + 1 > wc_word->length) {
-        wc_word_expand_capacity(wc_word, strlen(word) + 1 - wc_word->length, &newError);
+        wc_word_expand_capacity(wc_word, (int)(strlen(word) + 1 - wc_word->length), &newError);
         if (newError) {
             exit(newError);
         }
     }
-    strcpy(wc_word, word);
+    strcpy(wc_word->word, word);
     *error = WCNoneError;
 }
 
@@ -126,6 +125,7 @@ WCWordInfo wc_word_get_info(WCWord * word, WCError * error) {
 void wc_word_set_info(WCWord * word, WCWordInfo info, WCError * error) {
     if (word == NULL) {
         *error = WCNullPointerError;
+        return;
     }
     word->info = info;
     *error = WCNoneError;

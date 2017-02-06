@@ -1,5 +1,5 @@
 #include "WCIndex.h"
-#include "WCErrorHandler.h"
+
 
 struct WCIndexNode {
     WCWordInfo info;
@@ -53,7 +53,7 @@ void wc_index_add(WCIndex * index, WCWordInfo info, WCError * error) {
         *error = WCNullPointerError;
         return;
     }
-    if (info.line <= 0 || info.position <= 0) {
+    if (info.row <= 0 || info.column <= 0) {
         *error = WCIndexRangeError;
         return;
     }
@@ -70,7 +70,7 @@ void wc_index_add(WCIndex * index, WCWordInfo info, WCError * error) {
 }
 
 struct WCIndexIterator {
-    WCIndeNode * iterator;
+    struct WCIndexNode * iterator;
 };
 
 WCIndexIterator wc_index_iterator_create(WCIndex * index, WCError * error) {

@@ -5,6 +5,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "WCErrorHandler.h"
+
 struct WCIndex;
 typedef struct WCIndex WCIndex;
 

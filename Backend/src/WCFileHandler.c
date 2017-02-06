@@ -1,8 +1,4 @@
 #include "WCFileHandler.h"
-#include "WCErrorHandler.h"
-
-typedef WCFileType {Book, Trie, Hash, None} WCFileType;
-typedef WCFileState {Open, Closed} WCFileState;
 
 struct WCFileHandler {
     FILE * fp;
@@ -21,6 +17,33 @@ WCFileHandler * wc_file_handler_create(WCError * error) {
     handler->state = Closed;
     *error = WCNoneError;
     return handler;
+}
+
+WCFileType wc_file_handler_get_type(WCFileHandler * handler, WCError * error) {
+    if (handler == NULL) {
+        *error = WCNullPointerError;
+        return None;
+    }
+    *error = WCNoneError;
+    return handler->type;
+}
+
+WCFileState wc_file_handler_get_state(WCFileHandler * handler, WCError *error){
+    if (handler == NULL) {
+        *error = WCNullPointerError;
+        return Closed;
+    }
+    *error = WCNoneError;
+    return handler->state;
+}
+
+FILE * wc_file_handler_get_file_pointer(WCFileHandler * handler, WCError * error) {
+    if (handler == NULL) {
+        *error = WCNullPointerError;
+        return NULL;
+    }
+    *error = WCNoneError;
+    return handler->fp;
 }
 
 void wc_file_open_book(WCFileHandler * handler, const char * path, WCError * error) {

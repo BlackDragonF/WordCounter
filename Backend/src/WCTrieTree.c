@@ -1,5 +1,6 @@
 #include "WCTrieTree.h"
 #include "WCIndex.h"
+
 #define MAX_CHARACTER_NUMBER (26)
 
 struct WCTrieNode {
@@ -22,7 +23,7 @@ WCTrieTree * wc_trie_tree_create(WCError * error) {
         *error = WCMemoryOverflowError;
         return NULL;
     }
-    tree->root = malloc(sizeof(WCTrieNode));
+    tree->root = malloc(sizeof(struct WCTrieNode));
     if (tree->root == NULL) {
         *error = WCMemoryOverflowError;
         free(tree);
@@ -41,23 +42,23 @@ void wc_trie_tree_insert_word(WCTrieTree * tree, WCWord * word, WCError * error)
         return;
     }
     WCError internalError;
-    char * word = wc_word_get_word(word, &internalError);
+    const char * wordPtr = wc_word_get_word(word, &internalError);
     if (internalError != WCNoneError) {
         exit(internalError);
     }
     int index;
-    WCTrieNode * node = tree->root;
-    while (*word) {
-        index = wc_chararcter_index_convert(*word);
+    struct WCTrieNode * node = tree->root;
+    while (*wordPtr) {
+        index = wc_chararcter_index_convert(*wordPtr);
         if (node->child[index] == NULL) {
-            WCTrieNode * temp = malloc(sizeof(WCTrieNode));
-            temp->character = *word;
+            struct WCTrieNode * temp = malloc(sizeof(struct WCTrieNode));
+            temp->character = *wordPtr;
             memset(temp->child, 0, sizeof(struct WCTrieNode *) * MAX_CHARACTER_NUMBER);
             temp->index = NULL;
             node->child[index] = temp;
         }
         node = node->child[index];
-        word++;
+        wordPtr++;
     }
     if (node->index == NULL) {
         node->index = wc_index_create(&internalError);
@@ -65,7 +66,11 @@ void wc_trie_tree_insert_word(WCTrieTree * tree, WCWord * word, WCError * error)
             exit(internalError);
         }
     }
-    wc_index_add(node->index, word->info, &internalError);
+    WCWordInfo info = wc_word_get_info(word, &internalError);
+    if (internalError != WCNoneError) {
+        exit(internalError);
+    }
+    wc_index_add(node->index, info, &internalError);
     if (internalError != WCNoneError) {
         exit(internalError);
     }
@@ -78,20 +83,20 @@ WCIndex * wc_trie_tree_search_word(WCTrieTree * tree, WCWord * word, WCError * e
         return NULL;
     }
     WCError internalError;
-    char * word = wc_word_get_word(word, &internalError);
+    const char * wordPtr = wc_word_get_word(word, &internalError);
     if (internalError != WCNoneError) {
         exit(internalError);
     }
     int index;
-    WCTrieNode * node = tree->root;
-    while (*word) {
-        index = wc_chararcter_index_convert(*word);
+    struct WCTrieNode * node = tree->root;
+    while (*wordPtr) {
+        index = wc_chararcter_index_convert(*wordPtr);
         if (node->child[index] == NULL) {
             *error = WCNoneError;
             return NULL;
         }
         node = node->child[index];
-        word++;
+        wordPtr++;
     }
     *error = WCNoneError;
     return node->index;
