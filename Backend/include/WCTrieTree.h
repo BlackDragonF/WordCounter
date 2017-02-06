@@ -13,7 +13,8 @@ typedef struct WCTrieTree WCTrieTree;
 
 WCTrieTree * wc_trie_tree_create(WCError * error);
 void wc_trie_tree_destroy(WCTrieTree * tree, WCError * error);
-void wc_trie_tree_insert_word(WCWord * word, WCError * error);
+void wc_trie_tree_insert_word(WCTrieTree * tree, WCWord * word, WCError * error);
+WCIndex * wc_trie_tree_search_word(WCTrieTree * tree, WCWord * word, WCError * error);
 
 
 

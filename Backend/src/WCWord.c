@@ -5,6 +5,7 @@ struct WCWord {
     int length;
     int capacity;
     char * word;
+    WCWordInfo info;
 };
 
 static void wc_word_expand_capacity(WCWord * word, int increment, WCError * error) {
@@ -107,5 +108,25 @@ void wc_word_set_word(WCWord * wc_word, char * word, WCError * error) {
         }
     }
     strcpy(wc_word, word);
+    *error = WCNoneError;
+}
+
+WCWordInfo wc_word_get_info(WCWord * word, WCError * error) {
+    if (word == NULL) {
+        *error = WCNullPointerError;
+        WCWordInfo info;
+        info.row = 0;
+        info.column = 0;
+        return info;
+    }
+    *error = WCNoneError;
+    return word->info;
+}
+
+void wc_word_set_info(WCWord * word, WCWordInfo info, WCError * error) {
+    if (word == NULL) {
+        *error = WCNullPointerError;
+    }
+    word->info = info;
     *error = WCNoneError;
 }

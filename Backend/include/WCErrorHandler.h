@@ -7,6 +7,10 @@ typedef enum WCError {
     WCMemoryOverflowError,
 
     WCIndexRangeError = 200,
+
+    WCFileOpenError = 300,
+    WCFileCloseError,
+    WCFileInternalError,
 }WCError;
 
 
