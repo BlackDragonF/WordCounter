@@ -130,3 +130,12 @@ void wc_word_set_info(WCWord * word, WCWordInfo info, WCError * error) {
     word->info = info;
     *error = WCNoneError;
 }
+
+int wc_word_get_length(WCWord * word, WCError * error) {
+    if (word == NULL) {
+        *error = WCNullPointerError;
+        return 0;
+    }
+    *error = WCNoneError;
+    return word->length;
+}

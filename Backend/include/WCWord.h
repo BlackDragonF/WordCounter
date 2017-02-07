@@ -22,4 +22,5 @@ const char * wc_word_get_word(WCWord * word, WCError * error);
 void wc_word_set_word(WCWord * wc_word, char * word, WCError * error);
 WCWordInfo wc_word_get_info(WCWord * word, WCError * error);
 void wc_word_set_info(WCWord * word, WCWordInfo info, WCError * error);
+int wc_word_get_length(WCWord * word, WCError * error);
 #endif

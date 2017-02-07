@@ -17,6 +17,23 @@ static inline int wc_chararcter_index_convert(char character) {
     return tolower(character) - 'a';
 }
 
+static void wc_trie_node_destroy(struct WCTrieNode * node) {
+    int index;
+    for (index = 0 ; index < MAX_CHARACTER_NUMBER ; ++index) {
+        if (node->child[index] != NULL) {
+            wc_trie_node_destroy(node->child[index]);
+        }
+    }
+    if (node->index != NULL) {
+        WCError internalError;
+        wc_index_destroy(node->index, &internalError);
+        if (internalError != WCNoneError) {
+            exit(internalError);
+        }
+    }
+    free(node);
+}
+
 WCTrieTree * wc_trie_tree_create(WCError * error) {
     WCTrieTree * tree = malloc(sizeof(WCTrieTree));
     if (tree == NULL) {
@@ -100,4 +117,14 @@ WCIndex * wc_trie_tree_search_word(WCTrieTree * tree, WCWord * word, WCError * e
     }
     *error = WCNoneError;
     return node->index;
+}
+
+void wc_trie_tree_destroy(WCTrieTree * tree, WCError * error) {
+    if (tree == NULL) {
+        *error = WCNullPointerError;
+        return;
+    }
+    wc_trie_node_destroy(tree->root);
+    free(tree);
+    *error = WCNoneError;
 }

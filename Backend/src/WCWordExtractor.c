@@ -8,6 +8,8 @@ struct WCWordExtractor {
     char * current;
 };
 
+typedef enum ExtractState {Prepare, Character, Other} ExtractState;
+
 static int wc_word_extractor_fill_buffer(WCWordExtractor * extractor) {
     size_t count;
     if (!feof(extractor->fp)) {
@@ -20,8 +22,6 @@ static int wc_word_extractor_fill_buffer(WCWordExtractor * extractor) {
     }
     return 0;
 }
-
-typedef enum ExtractState {Prepare, Character, Other} ExtractState;
 
 WCWordExtractor * wc_word_extractor_create_with_file(WCFileHandler * handler, WCError * error) {
     if (handler == NULL) {
@@ -88,7 +88,7 @@ WCWord * wc_word_extractor_next_word(WCWordExtractor * extractor, WCError * erro
             if (!isalpha(*(extractor->current))) {
                 state = Other;
             } else {
-                wc_character_expand(word, *(extractor->current), &internalError);
+                wc_character_expand(word, tolower(*(extractor->current)), &internalError);
                 if (internalError != WCNoneError) {
                     exit(internalError);
                 }

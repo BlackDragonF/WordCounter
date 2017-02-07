@@ -73,15 +73,21 @@ struct WCIndexIterator {
     struct WCIndexNode * iterator;
 };
 
-WCIndexIterator wc_index_iterator_create(WCIndex * index, WCError * error) {
-    WCIndexIterator iterator;
+WCIndexIterator * wc_index_iterator_create(WCIndex * index, WCError * error) {
     if (index == NULL) {
         *error = WCNullPointerError;
-        return iterator;
+        return NULL;
     }
-    iterator.iterator = index->head->next;
-    if (iterator.iterator == NULL) {
+    WCIndexIterator * iterator = malloc(sizeof(WCIndexIterator));
+    if (iterator == NULL) {
+        *error = WCMemoryOverflowError;
+        return NULL;
+    }
+    iterator->iterator = index->head->next;
+    if (iterator->iterator == NULL) {
         *error = WCIndexRangeError;
+        free(iterator);
+        return NULL;
     }
     *error = WCNoneError;
     return iterator;
