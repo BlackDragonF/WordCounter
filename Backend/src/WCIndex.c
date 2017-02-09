@@ -69,6 +69,15 @@ void wc_index_add(WCIndex * index, WCWordInfo info, WCError * error) {
     *error = WCNoneError;
 }
 
+int wc_index_get_count(WCIndex * index, WCError * error) {
+    if (index == NULL) {
+        *error = WCNullPointerError;
+        return 0;
+    }
+    *error = WCNoneError;
+    return index->count;
+}
+
 struct WCIndexIterator {
     struct WCIndexNode * iterator;
 };
@@ -91,6 +100,15 @@ WCIndexIterator * wc_index_iterator_create(WCIndex * index, WCError * error) {
     }
     *error = WCNoneError;
     return iterator;
+}
+
+void wc_index_iterator_destroy(WCIndexIterator * iterator, WCError * error) {
+    if (iterator == NULL) {
+        *error = WCNullPointerError;
+        return;
+    }
+    free(iterator);
+    *error = WCNoneError;
 }
 
 void wc_index_iterator_next(WCIndexIterator * iterator, WCError * error) {

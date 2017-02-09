@@ -22,9 +22,10 @@ typedef struct WCWordInfo WCWordInfo;
 WCIndex * wc_index_create(WCError * error);
 void wc_index_destroy(WCIndex * index, WCError * error);
 void wc_index_add(WCIndex * index, WCWordInfo info, WCError * error);
-int wc_index_get_count(WCIndex * index);
+int wc_index_get_count(WCIndex * index, WCError * error);
 
 WCIndexIterator * wc_index_iterator_create(WCIndex * index, WCError * error);
+void wc_index_iterator_destroy(WCIndexIterator * iterator, WCError * error);
 void wc_index_iterator_next(WCIndexIterator * iterator, WCError * error);
 WCWordInfo wc_index_iterator_get_value(WCIndexIterator * iterator, WCError * error);
 

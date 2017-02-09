@@ -9,6 +9,7 @@ struct WCHashEntry {
 struct WCHashTable {
     int bound;
     struct WCHashEntry ** base;
+    int count;
 };
 
 static unsigned int RSHash(const char * str) {
@@ -40,6 +41,7 @@ WCHashTable * wc_hash_table_create(int size, WCError * error) {
         return NULL;
     }
     memset(hash->base, 0, sizeof(struct WCHashEntry *) * size);
+    hash->count = 0;
     *error = WCNoneError;
     return hash;
 }
@@ -80,6 +82,7 @@ void wc_hash_table_insert_word(WCHashTable * hash, WCWord * word, WCError * erro
         return;
     }
     WCError internalError;
+    hash->count++;
     const char * wordPtr = wc_word_get_word(word, &internalError);
     if (internalError != WCNoneError) {
         exit(internalError);
@@ -159,4 +162,120 @@ WCIndex * wc_hash_table_search_word(WCHashTable * hash, WCWord * word, WCError *
     }
     *error = WCNoneError;
     return NULL;
+}
+
+void wc_hash_table_delete_word(WCHashTable * hash, WCWord * word, WCError * error) {
+    if (hash == NULL || word == NULL) {
+        *error = WCNullPointerError;
+        return;
+    }
+    WCError internalError;
+    const char * wordPtr = wc_word_get_word(word, &internalError);
+    if (internalError != WCNoneError) {
+        exit(internalError);
+    }
+    int hash_num = RSHash(wordPtr);
+    int index = hash_num % hash->bound;
+    if ((hash->base)[index] != NULL) {
+        struct WCHashEntry * temp = (hash->base)[index];
+        while(temp->next) {
+            if (temp->next->word && strcmp(temp->next->word, wordPtr) == 0) {
+                struct WCHashEntry * p = temp->next;
+                int count = wc_index_get_count(p->index, &internalError);
+                if (internalError != WCNoneError) {
+                    exit(internalError);
+                }
+                hash->count -= count;
+                temp->next = p->next;
+                if (p->index) {
+                    wc_index_destroy(p->index, &internalError);
+                    if (internalError != WCNoneError) {
+                        exit(internalError);
+                    }
+                }
+                if (p->word) free(p->word);
+                free(p);
+                *error = WCNoneError;
+                return;
+            }
+            temp = temp->next;
+        }
+    }
+    *error = WCNoneError;
+}
+
+struct WCHashTableIterator {
+    WCHashTable * hash;
+    int index;
+    struct WCHashEntry * entry;
+};
+
+WCHashTableIterator * wc_hash_table_iterator_create(WCHashTable * hash, WCError * error) {
+    if (hash == NULL) {
+        *error = WCNullPointerError;
+        return NULL;
+    }
+    WCHashTableIterator * iterator = malloc(sizeof(WCHashTableIterator));
+    iterator->hash = hash;
+    int index = 0;
+    while (index < hash->bound) {
+        if ((hash->base)[index] != NULL) {
+            struct WCHashEntry * entry = (hash->base)[index]->next;
+            if (entry != NULL) {
+                iterator->index = index;
+                iterator->entry = entry;
+                *error = WCNoneError;
+                return iterator;
+            }
+        }
+        index++;
+    }
+    *error = WCIndexRangeError;
+    free(iterator);
+    return NULL;
+}
+
+void wc_hash_table_iterator_destroy(WCHashTableIterator * iterator, WCError * error) {
+    if (iterator == NULL) {
+        *error = WCNullPointerError;
+        return;
+    }
+    free(iterator);
+    *error = WCNoneError;
+}
+
+void wc_hash_table_iterator_next(WCHashTableIterator * iterator, WCError * error) {
+    if (iterator == NULL) {
+        *error = WCNullPointerError;
+        return;
+    }
+    iterator->entry = iterator->entry->next;
+    if (iterator->entry == NULL) {
+        iterator->index++;
+        while (iterator->index < iterator->hash->bound) {
+            if ((iterator->hash->base)[iterator->index] != NULL) {
+                struct WCHashEntry * entry = (iterator->hash->base)[iterator->index]->next;
+                if (entry != NULL) {
+                    iterator->entry = entry;
+                    *error = WCNoneError;
+                    return;
+                }
+            }
+            iterator->index++;
+        }
+    } else {
+        *error = WCNoneError;
+        return;
+    }
+    *error = WCIndexRangeError;
+}
+
+WCIndex * wc_hash_table_iterator_get_index(WCHashTableIterator * iterator, char ** word, WCError * error) {
+    if (iterator == NULL || word == NULL) {
+        *error = WCNullPointerError;
+        return NULL;
+    }
+    *word = iterator->entry->word;
+    *error = WCNoneError;
+    return iterator->entry->index;
 }

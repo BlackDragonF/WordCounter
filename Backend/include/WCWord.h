@@ -17,10 +17,14 @@ typedef struct WCWord WCWord;
 WCWord * wc_word_create(int capacity, WCError * error);
 void wc_word_clean(WCWord * word, WCError * error);
 void wc_word_destroy(WCWord * word, WCError * error);
+
 void wc_character_expand(WCWord * word, char character, WCError * error);
+void wc_character_shrink(WCWord * word, WCError * error);
+
 const char * wc_word_get_word(WCWord * word, WCError * error);
 void wc_word_set_word(WCWord * wc_word, char * word, WCError * error);
 WCWordInfo wc_word_get_info(WCWord * word, WCError * error);
 void wc_word_set_info(WCWord * word, WCWordInfo info, WCError * error);
 int wc_word_get_length(WCWord * word, WCError * error);
+
 #endif

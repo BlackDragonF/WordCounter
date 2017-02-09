@@ -85,6 +85,16 @@ void wc_character_expand(WCWord * word, char character, WCError * error) {
     *error = WCNoneError;
 }
 
+void wc_character_shrink(WCWord * word, WCError * error) {
+    if (word == NULL) {
+        *error = WCNullPointerError;
+        return;
+    }
+    (word->word)[word->length] = '\0';
+    (word->length)--;
+    *error = WCNoneError;
+}
+
 const char * wc_word_get_word(WCWord * word, WCError * error) {
     if (word == NULL) {
         *error = WCNullPointerError;
