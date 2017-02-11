@@ -7,6 +7,7 @@
 
 #include "WCWord.h"
 #include "WCIndex.h"
+#include "WCFileHandler.h"
 
 struct WCHashTable;
 typedef struct WCHashTable WCHashTable;
@@ -24,5 +25,8 @@ WCHashTableIterator * wc_hash_table_iterator_create(WCHashTable * hash, WCError 
 void wc_hash_table_iterator_destroy(WCHashTableIterator * iterator, WCError * error);
 void wc_hash_table_iterator_next(WCHashTableIterator * iterator, WCError * error);
 WCIndex * wc_hash_table_iterator_get_index(WCHashTableIterator * iterator, char ** word, WCError * error);
+
+void wc_hash_table_write_to_file(WCHashTable * hash, WCFileHandler * handler, const char * path, WCError * error);
+WCHashTable * wc_hash_table_read_from_file(WCFileHandler * handler, const char * path, WCError * error);
 
 #endif

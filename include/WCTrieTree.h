@@ -8,6 +8,7 @@
 
 #include "WCWord.h"
 #include "WCIndex.h"
+#include "WCFileHandler.h"
 
 struct WCTrieTree;
 typedef struct WCTrieTree WCTrieTree;
@@ -27,4 +28,6 @@ void wc_trie_tree_delete_word(WCTrieTree * tree, WCWord * word, WCError * error)
 WCTrieTreeTraverseResult * wc_trie_tree_traverse(WCTrieTree * tree, WCError * error);
 void wc_trie_tree_traverse_result_destroy(WCTrieTreeTraverseResult * result, WCError * error);
 
+void wc_trie_tree_write_to_file(WCTrieTree * trie, WCFileHandler * handler, const char * path, WCError * error);
+WCTrieTree * wc_trie_tree_read_from_file(WCFileHandler * handler, WCError * error);
 #endif

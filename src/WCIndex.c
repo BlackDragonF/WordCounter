@@ -135,3 +135,72 @@ WCWordInfo wc_index_iterator_get_value(WCIndexIterator * iterator, WCError * err
     *error = WCNoneError;
     return iterator->iterator->info;
 }
+
+static void wc_struct_index_node_serialize(WCIndexNode * node, FILE * fp, WCError * error) {
+    if (node == NULL || fp == NULL) {
+        *error = WCNullPointerError;
+        return;
+    }
+    WCObjectTag tag = WCIndexNodeObject;
+    fwrite(&tag, sizeof(WCObjectTag), 1, fp);
+    fwrite(node, sizeof(WCIndexNode), 1, fp);
+    *error = WCNoneError;
+}
+
+void wc_struct_index_serialize(WCIndex * index, FILE * fp, WCError * error) {
+    if (index == NULL || fp == NULL) {
+        *error = WCNullPointerError;
+        return;
+    }
+    WCObjectTag tag = WCIndexObject;
+    fwrite(&tag, sizeof(WCObjectTag), 1, fp);
+    fwrite(index, sizeof(WCIndex), 1, fp);
+    // Head node is NOT INCLUDED
+    WCIndexNode * temp = index->head->next;
+    WCError internalError;
+    while (temp) {
+        wc_struct_index_node_serialize(temp, fp, &internalError);
+        if (internalError != WCNoneError) {
+            exit(internalError);
+        }
+        temp = temp->next;
+    }
+    *error = WCNoneError;
+}
+
+WCIndex * wc_struct_index_deserialize(FILE * fp, WCError * error) {
+    if (fp == NULL) {
+        *error = WCNullPointerError;
+        return NULL;
+    }
+    WCObjectTag tag;
+    WCIndex * index = malloc(sizeof(WCIndex));
+    if (index == NULL) {
+        exit(WCMemoryOverflowError);
+    }
+    fread(index, sizeof(WCIndex), 1, fp);
+    index->head = malloc(sizeof(WCIndexNode));
+    if (index->head == NULL) {
+        *error = WCMemoryOverflowError;
+        free(index);
+        return NULL;
+    }
+    index->head->info.row = 0;
+    index->head->info.column = 0;
+    index->head->next = NULL;
+    WCIndexNode * tail = index->head;
+    int count;
+    for (count = 0 ; count < index->count ; ++count) {
+        fread(&tag, sizeof(WCObjectTag), 1, fp);
+        if (tag != WCIndexNodeObject) {
+            exit(WCFileInternalError);
+        }
+        WCIndexNode * temp = malloc(sizeof(WCIndexNode));
+        fread(temp, sizeof(WCIndex), 1, fp);
+        temp->next = NULL;
+        tail->next = temp;
+        tail = tail->next;
+    }
+    *error = WCNoneError;
+    return index;
+}

@@ -6,6 +6,7 @@
 #include <string.h>
 
 #include "WCErrorHandler.h"
+#include "WCFileHandler.h"
 
 struct WCIndex;
 typedef struct WCIndex WCIndex;
@@ -28,5 +29,8 @@ WCIndexIterator * wc_index_iterator_create(WCIndex * index, WCError * error);
 void wc_index_iterator_destroy(WCIndexIterator * iterator, WCError * error);
 void wc_index_iterator_next(WCIndexIterator * iterator, WCError * error);
 WCWordInfo wc_index_iterator_get_value(WCIndexIterator * iterator, WCError * error);
+
+void wc_struct_index_serialize(WCIndex * index, FILE * fp, WCError * error);
+WCIndex * wc_struct_index_deserialize(FILE * fp, WCError * error);
 
 #endif

@@ -4,15 +4,14 @@
 typedef enum WCError {
     WCNoneError = 0,
     WCNullPointerError = 100,
-    WCMemoryOverflowError,
+    WCMemoryOverflowError = 101,
 
     WCIndexRangeError = 200,
 
     WCFileOpenError = 300,
-    WCFileCloseError,
-    WCFileInternalError,
+    WCFileCloseError = 301,
+    WCFileInternalError = 302,
+    
 }WCError;
-
-
 
 #endif
