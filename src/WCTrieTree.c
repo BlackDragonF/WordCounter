@@ -1,5 +1,4 @@
 #include "WCTrieTree.h"
-#include "WCIndex.h"
 
 #define MAX_CHARACTER_NUMBER (26)
 

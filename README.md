@@ -1,14 +1,45 @@
 # WordCounter
 
-## Introduction
+## Description
 
 This is the course design of Data Structure from Computer Science and Technology Department in HUST.
 
-A word counter program based on Trie Tree and Hash Table.
+A command-line word counter program based on Trie Tree and Hash Table.
 
 The author of this program - BlackDragon - is an undergraduate of HUST. 
 
-Any discussion or suggestion is welcomed, but you SHOULD NOT COPY the code directly if you are facing the same/similar course design. After all, copying the codes won't make you stronger :)
+Any discussion/suggestion/issues/pull requests is welcomed, but you SHOULD NOT COPY the codes directly if you are facing the same/similar course design/experiment. After all, copying the codes won't make you stronger :)
+
+`wordcounter [OPTIONS] file [FILENAME]`
+
+## Options
+	
+	-h				Print this help text and exit
+	-d				Use data file(hash table) instead of text file to generate look-up table
+	-s				Data structure used to generate look-up table - trie, hash, both - default is both
+					If -d is specified, -s will be ignored
+	-k				Save the look-up table(hash table) to file
+					If -s isn't specified with hash or both, -k will be ignored
+	-f				Enable interactive find mode
+	-t				Print all the words and their positions in text
+
+
+## Examples
+
+	# Print the help text
+	$ wordcounter -h
+	
+	# Generate the look-up table using hash table and trie tree both
+	$ wordcounter -s both text.txt
+	
+	# Generate the look-up table using hash table and save to file
+	$ wordcounter -s hash -k text.txt
+	
+	# Load the look-up table(hash table) from file and traverse
+	$ wordcounter -dt data.dat
+	
+	# Generate the look-up table using trie tree and search words
+	$ wordcounter -s trie -f text.txt
 
 ## Architecture
 
