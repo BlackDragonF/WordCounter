@@ -143,7 +143,11 @@ WCIndex * wc_trie_tree_search_word(WCTrieTree * tree, WCWord * word, WCError * e
         exit(internalError);
     }
     *error = WCNoneError;
-    return node->index;
+    if (node != NULL) {
+        return node->index;
+    } else {
+        return NULL;
+    }
 }
 
 void wc_trie_tree_delete_word(WCTrieTree * tree, WCWord * word, WCError * error) {
@@ -173,11 +177,12 @@ void wc_trie_tree_delete_word(WCTrieTree * tree, WCWord * word, WCError * error)
 static void wc_trie_tree_traverse_recursively(struct WCTrieNode * node, WCWord * word, WCTrieTreeTraverseResult * result, int * result_index) {
     int index;
     WCError internalError;
+
     if (node == NULL) {
         return;
     }
+
     if (node->index != NULL) {
-        (result->indexes)[*result_index] = node->index;
         int length = wc_word_get_length(word, &internalError);
         if (internalError != WCNoneError) {
             exit(internalError);
@@ -191,7 +196,20 @@ static void wc_trie_tree_traverse_recursively(struct WCTrieNode * node, WCWord *
             exit(WCMemoryOverflowError);
         }
         strcpy((result->words)[*result_index], wordPtr);
-        (*result_index) += wc_index_get_count(node->index, &internalError);
+        WCIndexIterator * iterator = wc_index_iterator_create(node->index, &internalError);
+        if (internalError != WCNoneError) {
+            exit(internalError);
+        }
+        do {
+            WCWordInfo info = wc_index_iterator_get_value(iterator, &internalError);
+            if (internalError != WCNoneError) {
+                exit(internalError);
+            }
+            (result->info)[*result_index] = info;
+            (*result_index)++;
+
+        } while (wc_index_iterator_next(iterator, &internalError), internalError != WCIndexRangeError);
+        wc_index_iterator_destroy(iterator, &internalError);
         if (internalError != WCNoneError) {
             exit(internalError);
         }
@@ -223,8 +241,8 @@ WCTrieTreeTraverseResult * wc_trie_tree_traverse(WCTrieTree * tree, WCError * er
     }
     WCError internalError;
     result->count = tree->count;
-    result->indexes = malloc(sizeof(WCIndex *) * result->count);
-    if (result->indexes == NULL) {
+    result->info = malloc(sizeof(WCWordInfo) * result->count);
+    if (result->info == NULL) {
         *error = WCMemoryOverflowError;
         free(result);
         return NULL;
@@ -232,7 +250,7 @@ WCTrieTreeTraverseResult * wc_trie_tree_traverse(WCTrieTree * tree, WCError * er
     result->words = malloc(sizeof(char *) * result->count);
     if (result->words == NULL) {
         *error = WCMemoryOverflowError;
-        free(result->indexes);
+        free(result->info);
         free(result);
         return NULL;
     }
@@ -255,7 +273,7 @@ void wc_trie_tree_traverse_result_destroy(WCTrieTreeTraverseResult * result, WCE
         *error = WCNullPointerError;
         return;
     }
-    free(result->indexes);
+    free(result->info);
     int index;
     for (index = 0 ; index < result->count ; ++index) {
         if ((result->words)[index] != NULL) {
@@ -267,3 +285,11 @@ void wc_trie_tree_traverse_result_destroy(WCTrieTreeTraverseResult * result, WCE
     *error = WCNoneError;
 }
 
+int wc_trie_tree_get_count(WCTrieTree * tree, WCError * error) {
+    if (tree == NULL) {
+        *error = WCNullPointerError;
+        return 0;
+    }
+    *error = WCNoneError;
+    return tree->count;
+}

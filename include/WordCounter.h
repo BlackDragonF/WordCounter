@@ -9,6 +9,7 @@
 #include "WCWordExtractor.h"
 #include "WCTrieTree.h"
 #include "WCHashTable.h"
+#include "WCClock.h"
 
 /* header for argument parsing */
 #include <stdio.h>
@@ -20,5 +21,6 @@ typedef enum WCStructType {WCStructTypeTrieTree, WCStructTypeHashTable, WCStruct
 
 #define WC_DEFAULT_HASH_SIZE (1024)
 #define WC_MAX_ARGUMENT_LENGTH (128)
+#define WC_MAX_INPUT_LENGTH (128)
 
 #endif

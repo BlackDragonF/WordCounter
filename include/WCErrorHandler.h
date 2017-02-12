@@ -12,6 +12,7 @@ typedef enum WCError {
     WCFileCloseError = 31,
     WCFileInternalError = 32,
     
+    WCClockStateError = 40,
 }WCError;
 
 #endif

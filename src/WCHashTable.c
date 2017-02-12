@@ -483,3 +483,12 @@ WCHashTable * wc_hash_table_read_from_file(WCFileHandler * handler, const char *
     *error = WCNoneError;
     return hash;
 }
+
+int wc_hash_table_get_count(WCHashTable * hash, WCError * error) {
+    if (hash == NULL) {
+        *error = WCNullPointerError;
+        return 0;
+    }
+    *error = WCNoneError;
+    return hash->count;
+}

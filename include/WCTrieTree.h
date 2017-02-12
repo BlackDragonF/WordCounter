@@ -13,8 +13,8 @@
 struct WCTrieTree;
 typedef struct WCTrieTree WCTrieTree;
 
-typedef struct WCTrieTreeTraverseResult {
-    WCIndex ** indexes;
+typedef struct WCTrieTreeTraverseResult {;
+    WCWordInfo * info;
     char ** words;
     int count;
 }WCTrieTreeTraverseResult;
@@ -24,6 +24,8 @@ void wc_trie_tree_destroy(WCTrieTree * tree, WCError * error);
 void wc_trie_tree_insert_word(WCTrieTree * tree, WCWord * word, WCError * error);
 WCIndex * wc_trie_tree_search_word(WCTrieTree * tree, WCWord * word, WCError * error);
 void wc_trie_tree_delete_word(WCTrieTree * tree, WCWord * word, WCError * error);
+
+int wc_trie_tree_get_count(WCTrieTree * tree, WCError * error);
 
 WCTrieTreeTraverseResult * wc_trie_tree_traverse(WCTrieTree * tree, WCError * error);
 void wc_trie_tree_traverse_result_destroy(WCTrieTreeTraverseResult * result, WCError * error);

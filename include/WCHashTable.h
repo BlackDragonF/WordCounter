@@ -21,6 +21,8 @@ void wc_hash_table_insert_word(WCHashTable * hash, WCWord * word, WCError * erro
 WCIndex * wc_hash_table_search_word(WCHashTable * hash, WCWord * word, WCError * error);
 void wc_hash_table_delete_word(WCHashTable * hash, WCWord * word, WCError * error);
 
+int wc_hash_table_get_count(WCHashTable * hash, WCError * error);
+
 WCHashTableIterator * wc_hash_table_iterator_create(WCHashTable * hash, WCError * error);
 void wc_hash_table_iterator_destroy(WCHashTableIterator * iterator, WCError * error);
 void wc_hash_table_iterator_next(WCHashTableIterator * iterator, WCError * error);

@@ -51,9 +51,13 @@ The program can be devided into these parts -
 * WCTrieTree - The naive implementation of trie tree.
 * WCHashTable - The implementation of hash table, using RSHash as hash function, has iterator API for traversal.
 * WCFileHandler - The wrapper for FILE pointer, managing file I/O and the serialization of data structure.
-* WCErrorHandler - The definition for possible error types.                                                                                                                                                                                             
+* WCErrorHandler - The definition for possible error types. 
+* WCClock - The abstraction of clock_t and clock() in *time.h*, providing function of counting time interval.
+* WordCounter - The main entry and the implementation for each function using basic modules.                                                                                                                                                                                            
 
 ## Shortcoming & Improving
+
+> It is all welcomed that you fork this project and continue with this program and pull requests are welcomed as well :)
 
 * need a better way of error handling, in the current circumstance, program will exit directly if an error is detected.
 * the serialization of trie tree remains to be done.
@@ -68,6 +72,7 @@ The program can be devided into these parts -
 * 2017/01/15 design general architecture of program
 * 2017/02/09 finish all basic modules
 * 2017/02/11 extra: serialize and deserialize of hash table
+* 2017/02/12 add WCClock, finish command-line program and debug
 
 ## License
 
