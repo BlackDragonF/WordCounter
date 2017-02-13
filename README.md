@@ -73,6 +73,7 @@ The program can be devided into these parts -
 * 2017/02/09 finish all basic modules
 * 2017/02/11 extra: serialize and deserialize of hash table
 * 2017/02/12 add WCClock, finish command-line program and debug
+* 2017/02/13 add unique count
 
 ## License
 

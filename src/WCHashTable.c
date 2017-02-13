@@ -10,6 +10,7 @@ struct WCHashTable {
     int bound;
     struct WCHashEntry ** base;
     int count;
+    int unique;
 };
 
 static unsigned int RSHash(const char * str) {
@@ -42,6 +43,7 @@ WCHashTable * wc_hash_table_create(int size, WCError * error) {
     }
     memset(hash->base, 0, sizeof(struct WCHashEntry *) * size);
     hash->count = 0;
+    hash->unique = 0;
     *error = WCNoneError;
     return hash;
 }
@@ -116,6 +118,7 @@ void wc_hash_table_insert_word(WCHashTable * hash, WCWord * word, WCError * erro
         }
         temp = temp->next;
     }
+    hash->unique++;
     struct WCHashEntry * newEntry = malloc(sizeof(struct WCHashEntry));
     int length = wc_word_get_length(word, &internalError);
     if (internalError != WCNoneError) {
@@ -491,4 +494,13 @@ int wc_hash_table_get_count(WCHashTable * hash, WCError * error) {
     }
     *error = WCNoneError;
     return hash->count;
+}
+
+int wc_hash_table_get_unique(WCHashTable * hash, WCError * error) {
+    if (hash == NULL) {
+        *error = WCNullPointerError;
+        return 0;
+    }
+    *error = WCNoneError;
+    return hash->unique;
 }

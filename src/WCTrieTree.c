@@ -11,6 +11,7 @@ struct WCTrieNode {
 struct WCTrieTree {
     struct WCTrieNode * root;
     int count;
+    int unique;
 };
 
 static inline int wc_chararcter_index_convert(char character) {
@@ -50,6 +51,7 @@ WCTrieTree * wc_trie_tree_create(WCError * error) {
     memset(tree->root->child, 0, sizeof(struct WCTrieNode *) * MAX_CHARACTER_NUMBER);
     tree->root->index = NULL;
     tree->count = 0;
+    tree->unique = 0;
     *error = WCNoneError;
     return tree;
 }
@@ -95,6 +97,7 @@ void wc_trie_tree_insert_word(WCTrieTree * tree, WCWord * word, WCError * error)
         if (internalError != WCNoneError) {
             exit(internalError);
         }
+        tree->unique++;
     }
     WCWordInfo info = wc_word_get_info(word, &internalError);
     if (internalError != WCNoneError) {
@@ -292,4 +295,13 @@ int wc_trie_tree_get_count(WCTrieTree * tree, WCError * error) {
     }
     *error = WCNoneError;
     return tree->count;
+}
+
+int wc_trie_tree_get_unique(WCTrieTree * tree, WCError * error) {
+    if (tree == NULL) {
+        *error = WCNullPointerError;
+        return 0;
+    }
+    *error = WCNoneError;
+    return tree->unique;
 }

@@ -108,12 +108,16 @@ static WCHashTable * wc_construct_hash_table_from_text(WCFileHandler * handler, 
     if (error != WCNoneError) {
         printf("ERROR: Failed to get interval from WCClock\n");
     }
+    int unique = wc_hash_table_get_unique(hash, &error);
+    if (error != WCNoneError) {
+        printf("ERROR: Failed to get unique from WCHashTable\n");
+    }
     int count = wc_hash_table_get_count(hash, &error);
     if (error != WCNoneError) {
         printf("ERROR: Failed to get count from WCHashTable\n");
         printf("INFO: Constructing process succeed, using %.3lfs in total\n", interval);
     } else {
-        printf("INFO: Constructing process succeed, %d words in total, using %.3lfs in total\n", count, interval);
+        printf("INFO: Constructing process succeed, %d words in total, %d unique, using %.3lfs in total\n", count, unique, interval);
     }
     return hash;
 }
@@ -179,12 +183,16 @@ static WCTrieTree * wc_construct_trie_tree_from_text(WCFileHandler * handler, co
     if (error != WCNoneError) {
         printf("ERROR: Failed to get interval from WCClock\n");
     }
+    int unique = wc_trie_tree_get_unique(trie, &error);
+    if (error != WCNoneError) {
+        printf("ERROR: Failed to get unique from WCTrieTree\n");
+    }
     int count = wc_trie_tree_get_count(trie, &error);
     if (error != WCNoneError) {
         printf("ERROR: Failed to get count from WCTrieTree\n");
         printf("INFO: Constructing process succeed, using %.3lfs in total\n", interval);
     } else {
-        printf("INFO: Constructing process succeed, %d words in total, using %.3lfs in total\n", count, interval);
+        printf("INFO: Constructing process succeed, %d words in total, %d unique, using %.3lfs in total\n", count, unique, interval);
     }
     return trie;
 }
@@ -256,11 +264,15 @@ static void wc_hash_table_traverse_wrapper(WCHashTable * hash) {
     if (error != WCNoneError) {
         printf("ERROR: Failed to stop clock\n");
     }
+    int unique = wc_hash_table_get_unique(hash, &error);
+    if (error != WCNoneError) {
+        printf("ERROR: Failed to get unique from WCHashTable\n");
+    }
     double interval = wc_clock_get_interval(wc_clock, &error);
     if (error != WCNoneError) {
         printf("ERROR: Failed to get interval from WCClock\n");
     }
-    printf("INFO: Traversal process succeed, %d words in total, using %.3lfs in total\n", count, interval);
+    printf("INFO: Traversal process succeed, %d words in total, %d unique, using %.3lfs in total\n", count, unique, interval);
 }
 
 static void wc_trie_tree_traverse_wrapper(WCTrieTree * trie) {
@@ -295,11 +307,15 @@ static void wc_trie_tree_traverse_wrapper(WCTrieTree * trie) {
     if (error != WCNoneError) {
         printf("ERROR: Failed to stop clock\n");
     }
+    int unique = wc_trie_tree_get_unique(trie, &error);
+    if (error != WCNoneError) {
+        printf("ERROR: Failed to get unique from WCTrieTree\n");
+    }
     double interval = wc_clock_get_interval(wc_clock, &error);
     if (error != WCNoneError) {
         printf("ERROR: Failed to get interval from WCClock\n");
     }
-    printf("INFO: Traversal process succeed, %d words in total, using %.3lfs in total\n", count, interval);
+    printf("INFO: Traversal process succeed, %d words in total, %d unique, using %.3lfs in total\n", count, unique, interval);
 }
 
 static void wc_hash_table_search_word_wrapper(WCHashTable * hash, WCWord * word) {
@@ -559,12 +575,16 @@ int main(int argc, char *argv[]) {
         if (error != WCNoneError) {
             printf("ERROR: Failed to get interval from WCClock\n");
         }
+        int unique = wc_hash_table_get_unique(hash, &error);
+        if (error != WCNoneError) {
+            printf("ERROR: Failed to get unique from WCHashTable\n");
+        }
         int count = wc_hash_table_get_count(hash, &error);
         if (error != WCNoneError) {
             printf("ERROR: Failed to get count from WCHashTable\n");
             printf("INFO: Constructing process succeed, using %.3lfs in total\n", interval);
         } else {
-            printf("INFO: Constructing process succeed, %d words in total, using %.3lfs in total\n", count, interval);
+            printf("INFO: Constructing process succeed, %d words in total, %d unique, using %.3lfs in total\n", count, unique, interval);
         }
     }
     if (s == 1 && d == 0) {
