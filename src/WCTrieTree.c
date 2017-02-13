@@ -1,7 +1,9 @@
 #include "WCTrieTree.h"
 
+/* macro definition */
 #define MAX_CHARACTER_NUMBER (26)
 
+/* struct definition */
 struct WCTrieNode {
     char character;
     struct WCTrieNode * child[MAX_CHARACTER_NUMBER];
@@ -14,10 +16,12 @@ struct WCTrieTree {
     int unique;
 };
 
+/* turn character into index */
 static inline int wc_chararcter_index_convert(char character) {
     return tolower(character) - 'a';
 }
 
+/* recursively free WCTrieNode */
 static void wc_trie_node_destroy(struct WCTrieNode * node) {
     int index;
     for (index = 0 ; index < MAX_CHARACTER_NUMBER ; ++index) {
@@ -35,6 +39,7 @@ static void wc_trie_node_destroy(struct WCTrieNode * node) {
     free(node);
 }
 
+/* construct a WCTrieTree struct */
 WCTrieTree * wc_trie_tree_create(WCError * error) {
     WCTrieTree * tree = malloc(sizeof(WCTrieTree));
     if (tree == NULL) {
@@ -56,6 +61,7 @@ WCTrieTree * wc_trie_tree_create(WCError * error) {
     return tree;
 }
 
+/* destruct a WCTrieTree struct */
 void wc_trie_tree_destroy(WCTrieTree * tree, WCError * error) {
     printf("%d\n", tree->count);
     if (tree == NULL) {
@@ -67,6 +73,7 @@ void wc_trie_tree_destroy(WCTrieTree * tree, WCError * error) {
     *error = WCNoneError;
 }
 
+/* insert a word into trie tree */
 void wc_trie_tree_insert_word(WCTrieTree * tree, WCWord * word, WCError * error) {
     if (tree == NULL || word == NULL) {
         *error = WCNullPointerError;
@@ -110,6 +117,7 @@ void wc_trie_tree_insert_word(WCTrieTree * tree, WCWord * word, WCError * error)
     *error = WCNoneError;
 }
 
+/* recursively search a word in trie tree */
 static struct WCTrieNode * wc_trie_tree_search_node(WCTrieTree * tree, WCWord * word, WCError * error) {
     if (tree == NULL || word == NULL) {
         *error = WCNullPointerError;
@@ -135,6 +143,7 @@ static struct WCTrieNode * wc_trie_tree_search_node(WCTrieTree * tree, WCWord * 
     return node;
 }
 
+/* search a word in trie tree */
 WCIndex * wc_trie_tree_search_word(WCTrieTree * tree, WCWord * word, WCError * error) {
     if (tree == NULL || word == NULL) {
         *error = WCNullPointerError;
@@ -153,6 +162,7 @@ WCIndex * wc_trie_tree_search_word(WCTrieTree * tree, WCWord * word, WCError * e
     }
 }
 
+/* delete a word in trie tree */
 void wc_trie_tree_delete_word(WCTrieTree * tree, WCWord * word, WCError * error) {
     if (tree == NULL || word == NULL) {
         *error = WCNullPointerError;
@@ -177,6 +187,7 @@ void wc_trie_tree_delete_word(WCTrieTree * tree, WCWord * word, WCError * error)
     *error = WCNoneError;
 }
 
+/* recursively traverse a trie tree */
 static void wc_trie_tree_traverse_recursively(struct WCTrieNode * node, WCWord * word, WCTrieTreeTraverseResult * result, int * result_index) {
     int index;
     WCError internalError;
@@ -232,6 +243,7 @@ static void wc_trie_tree_traverse_recursively(struct WCTrieNode * node, WCWord *
     }
 }
 
+/* traverse a trie tree */
 WCTrieTreeTraverseResult * wc_trie_tree_traverse(WCTrieTree * tree, WCError * error) {
     if (tree == NULL) {
         *error = WCNullPointerError;
@@ -271,6 +283,7 @@ WCTrieTreeTraverseResult * wc_trie_tree_traverse(WCTrieTree * tree, WCError * er
     return result;
 }
 
+/* destruct the WCTrieTreeTraverseResult constructed by traverse operation */
 void wc_trie_tree_traverse_result_destroy(WCTrieTreeTraverseResult * result, WCError * error) {
     if (result == NULL) {
         *error = WCNullPointerError;
@@ -288,6 +301,7 @@ void wc_trie_tree_traverse_result_destroy(WCTrieTreeTraverseResult * result, WCE
     *error = WCNoneError;
 }
 
+/* get count from given WCTrieTree struct */
 int wc_trie_tree_get_count(WCTrieTree * tree, WCError * error) {
     if (tree == NULL) {
         *error = WCNullPointerError;
@@ -297,6 +311,7 @@ int wc_trie_tree_get_count(WCTrieTree * tree, WCError * error) {
     return tree->count;
 }
 
+/* get unique from given WCTrieTree struct */
 int wc_trie_tree_get_unique(WCTrieTree * tree, WCError * error) {
     if (tree == NULL) {
         *error = WCNullPointerError;

@@ -1,5 +1,6 @@
 #include "WCWord.h"
 
+/* struct definition */
 struct WCWord {
     int length;
     int capacity;
@@ -7,6 +8,7 @@ struct WCWord {
     WCWordInfo info;
 };
 
+/* expand capacity for given WCWord struct */
 static void wc_word_expand_capacity(WCWord * word, int increment, WCError * error) {
     if (word == NULL) {
         *error = WCNullPointerError;
@@ -27,6 +29,7 @@ static void wc_word_expand_capacity(WCWord * word, int increment, WCError * erro
     *error = WCNoneError;
 }
 
+/* construct a WCWord struct */
 WCWord * wc_word_create(int capacity, WCError * error) {
     WCWord * word = malloc(sizeof(struct WCWord));
     if (word == NULL) {
@@ -51,6 +54,7 @@ WCWord * wc_word_create(int capacity, WCError * error) {
     return word;
 }
 
+/* clean given WCWord struct */
 void wc_word_clean(WCWord * word, WCError * error) {
     if (word == NULL) {
         *error = WCNullPointerError;
@@ -61,6 +65,7 @@ void wc_word_clean(WCWord * word, WCError * error) {
     *error = WCNoneError;
 }
 
+/* destruct given WCWord struct */
 void wc_word_destroy(WCWord * word, WCError * error) {
     if (word == NULL) {
         *error = WCNullPointerError;
@@ -71,6 +76,7 @@ void wc_word_destroy(WCWord * word, WCError * error) {
     *error = WCNoneError;
 }
 
+/* push the letter to the bottom of the word */
 void wc_character_expand(WCWord * word, char character, WCError * error) {
     if (word->length >= word->capacity - 1) {
         WCError newError;
@@ -85,6 +91,7 @@ void wc_character_expand(WCWord * word, char character, WCError * error) {
     *error = WCNoneError;
 }
 
+/* pop the letter from the bottom of the word */
 void wc_character_shrink(WCWord * word, WCError * error) {
     if (word == NULL) {
         *error = WCNullPointerError;
@@ -95,6 +102,7 @@ void wc_character_shrink(WCWord * word, WCError * error) {
     *error = WCNoneError;
 }
 
+/* get the word from given WCWord struct */
 const char * wc_word_get_word(WCWord * word, WCError * error) {
     if (word == NULL) {
         *error = WCNullPointerError;
@@ -104,6 +112,7 @@ const char * wc_word_get_word(WCWord * word, WCError * error) {
     return word->word;
 }
 
+/* set the word to given WCWord struct */
 void wc_word_set_word(WCWord * wc_word, char * word, WCError * error) {
     if (word == NULL || wc_word == NULL) {
         *error = WCNullPointerError;
@@ -120,6 +129,7 @@ void wc_word_set_word(WCWord * wc_word, char * word, WCError * error) {
     *error = WCNoneError;
 }
 
+/* get the info from given WCWord struct */
 WCWordInfo wc_word_get_info(WCWord * word, WCError * error) {
     if (word == NULL) {
         *error = WCNullPointerError;
@@ -132,6 +142,7 @@ WCWordInfo wc_word_get_info(WCWord * word, WCError * error) {
     return word->info;
 }
 
+/* get the info to given WCWord struct */
 void wc_word_set_info(WCWord * word, WCWordInfo info, WCError * error) {
     if (word == NULL) {
         *error = WCNullPointerError;
@@ -141,6 +152,7 @@ void wc_word_set_info(WCWord * word, WCWordInfo info, WCError * error) {
     *error = WCNoneError;
 }
 
+/* get the length from given WCWord struct */
 int wc_word_get_length(WCWord * word, WCError * error) {
     if (word == NULL) {
         *error = WCNullPointerError;

@@ -1,6 +1,7 @@
 #ifndef WC_ERROR_HANDLER_H
 #define WC_ERROR_HANDLER_H
 
+/* error definition */
 typedef enum WCError {
     WCNoneError = 0,
     WCNullPointerError = 10,
@@ -11,7 +12,7 @@ typedef enum WCError {
     WCFileOpenError = 30,
     WCFileCloseError = 31,
     WCFileInternalError = 32,
-    
+
     WCClockStateError = 40,
 }WCError;
 

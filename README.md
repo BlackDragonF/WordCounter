@@ -62,7 +62,7 @@ The program can be devided into these parts -
 * need a better way of error handling, in the current circumstance, program will exit directly if an error is detected.
 * the serialization of trie tree remains to be done.
 * trie tree can be traversed with the help of iterator.
-* need a better method to extract words.
+* need a better method to extract words, regex expression may be used.
 * the naive implementation of trie tree occupies much memory, which could be improved by using knowledge from compilers.
 * multithread programming can be used to improve the performance of the program.
 
@@ -73,7 +73,7 @@ The program can be devided into these parts -
 * 2017/02/09 finish all basic modules
 * 2017/02/11 extra: serialize and deserialize of hash table
 * 2017/02/12 add WCClock, finish command-line program and debug
-* 2017/02/13 add unique count
+* 2017/02/13 add unique count and add comment
 
 ## License
 

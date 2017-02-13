@@ -1,13 +1,16 @@
 #include "WCClock.h"
 
+/* internal enum definition */
 typedef enum WCClockState {WCClockRun, WCClockStop} WCClockState;
 
+/* struct definition */
 struct WCClock {
     WCClockState state;
     clock_t clock;
     double interval;
 };
 
+/* construct a WCClock struct */
 WCClock * wc_clock_create(WCError * error) {
     WCClock * wc_clock = malloc(sizeof(WCClock));
     if (wc_clock == NULL) {
@@ -20,6 +23,7 @@ WCClock * wc_clock_create(WCError * error) {
     return wc_clock;
 }
 
+/* destruct given WCClock struct */
 void wc_clock_destroy(WCClock * wc_clock, WCError * error) {
     if (wc_clock == NULL) {
         *error = WCNullPointerError;
@@ -29,6 +33,7 @@ void wc_clock_destroy(WCClock * wc_clock, WCError * error) {
     *error = WCNoneError;
 }
 
+/* start timing, failed if the clock has started */
 void wc_clock_start(WCClock * wc_clock, WCError * error) {
     if (wc_clock == NULL) {
         *error = WCNullPointerError;
@@ -43,6 +48,7 @@ void wc_clock_start(WCClock * wc_clock, WCError * error) {
     *error = WCNoneError;
 }
 
+/* stop timing, failed if the clock has stopped */
 void wc_clock_stop(WCClock * wc_clock, WCError * error) {
     if (wc_clock == NULL) {
         *error = WCNullPointerError;
@@ -59,6 +65,7 @@ void wc_clock_stop(WCClock * wc_clock, WCError * error) {
     *error = WCNoneError;
 }
 
+/* get the time interval between last start and stop */
 double wc_clock_get_interval(WCClock * wc_clock, WCError * error) {
     if (wc_clock == NULL) {
         *error = WCNullPointerError;

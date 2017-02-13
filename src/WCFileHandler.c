@@ -1,5 +1,6 @@
 #include "WCFileHandler.h"
 
+/* struct definition */
 struct WCFileHandler {
     FILE * fp;
     WCFileType type;
@@ -7,6 +8,7 @@ struct WCFileHandler {
     WCFileReadwrite readwrite;
 };
 
+/* construct a WCFileHandler struct */
 WCFileHandler * wc_file_handler_create(WCError * error) {
     WCFileHandler * handler = malloc(sizeof(WCFileHandler));
     if (handler == NULL) {
@@ -21,6 +23,7 @@ WCFileHandler * wc_file_handler_create(WCError * error) {
     return handler;
 }
 
+/* destruct given WCFileHandler struct */
 WCFileType wc_file_handler_get_type(WCFileHandler * handler, WCError * error) {
     if (handler == NULL) {
         *error = WCNullPointerError;
@@ -30,6 +33,7 @@ WCFileType wc_file_handler_get_type(WCFileHandler * handler, WCError * error) {
     return handler->type;
 }
 
+/* get current state Open/Closed for given WCFileHandler struct */
 WCFileState wc_file_handler_get_state(WCFileHandler * handler, WCError *error){
     if (handler == NULL) {
         *error = WCNullPointerError;
@@ -39,6 +43,7 @@ WCFileState wc_file_handler_get_state(WCFileHandler * handler, WCError *error){
     return handler->state;
 }
 
+/* get current readwrite Read/Write for given WCFileHandler struct */
 WCFileReadwrite wc_file_handler_get_readwrite(WCFileHandler * handler, WCError * error) {
     if (handler == NULL) {
         *error = WCNullPointerError;
@@ -48,6 +53,7 @@ WCFileReadwrite wc_file_handler_get_readwrite(WCFileHandler * handler, WCError *
     return handler->readwrite;
 }
 
+/* get current FILE * for given WCFileHandler struct */
 FILE * wc_file_handler_get_file_pointer(WCFileHandler * handler, WCError * error) {
     if (handler == NULL) {
         *error = WCNullPointerError;
@@ -57,6 +63,7 @@ FILE * wc_file_handler_get_file_pointer(WCFileHandler * handler, WCError * error
     return handler->fp;
 }
 
+/* open the book in text mode */
 void wc_file_open_book(WCFileHandler * handler, const char * path, WCError * error) {
     if (handler == NULL || path == NULL) {
         *error = WCNullPointerError;
@@ -80,6 +87,7 @@ void wc_file_open_book(WCFileHandler * handler, const char * path, WCError * err
     *error = WCNoneError;
 }
 
+/* open the hash table file in binary mode */
 void wc_file_open_hash(WCFileHandler * handler, const char * path, WCFileReadwrite readwrite, WCError * error) {
     if (handler == NULL || path == NULL) {
         *error = WCNullPointerError;
@@ -108,6 +116,7 @@ void wc_file_open_hash(WCFileHandler * handler, const char * path, WCFileReadwri
     *error = WCNoneError;
 }
 
+/* open the trie tree file in binary mode */
 void wc_file_open_trie(WCFileHandler * handler, const char * path, WCFileReadwrite readwrite, WCError * error) {
     if (handler == NULL || path == NULL) {
         *error = WCNullPointerError;
@@ -136,6 +145,7 @@ void wc_file_open_trie(WCFileHandler * handler, const char * path, WCFileReadwri
     *error = WCNoneError;
 }
 
+/* close the file kept by current WCFileHandler */
 void wc_file_close(WCFileHandler * handler, WCError * error) {
     if (handler->state == Closed) {
         *error = WCFileCloseError;
@@ -147,6 +157,7 @@ void wc_file_close(WCFileHandler * handler, WCError * error) {
     *error = WCNoneError;
 }
 
+/* destruct given WCFileHandler struct */
 void wc_file_handler_destroy(WCFileHandler * handler, WCError * error) {
     WCError internalError = WCNoneError;
     if (handler->state == Open) {
@@ -159,6 +170,7 @@ void wc_file_handler_destroy(WCFileHandler * handler, WCError * error) {
     *error = WCNoneError;
 }
 
+/* generate tag for NULL */
 void wc_struct_null_serialize(FILE * fp, WCError * error) {
     if (fp == NULL) {
         *error = WCNullPointerError;
@@ -169,6 +181,7 @@ void wc_struct_null_serialize(FILE * fp, WCError * error) {
     *error = WCNoneError;
 }
 
+/* string serializer */
 void wc_struct_string_serialize(const char * string, int length, FILE * fp, WCError * error) {
     if (string == NULL || fp == NULL) {
         *error = WCNullPointerError;
@@ -185,6 +198,7 @@ void wc_struct_string_serialize(const char * string, int length, FILE * fp, WCEr
     *error = WCNoneError;
 }
 
+/* string deserializer */
 char * wc_struct_string_deserialize(FILE * fp, WCError * error) {
     if (fp == NULL) {
         *error = WCNullPointerError;

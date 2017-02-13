@@ -1,5 +1,6 @@
 #include "WCWordExtractor.h"
 
+/* struct definition */
 struct WCWordExtractor {
     char buffer[WC_CHAR_BUFFER_SIZE];
     int row;
@@ -8,8 +9,10 @@ struct WCWordExtractor {
     char * current;
 };
 
+/* enum definition */
 typedef enum ExtractState {Prepare, Character, Other} ExtractState;
 
+/* fill the buffer */
 static int wc_word_extractor_fill_buffer(WCWordExtractor * extractor) {
     size_t count;
     if (!feof(extractor->fp)) {
@@ -23,6 +26,7 @@ static int wc_word_extractor_fill_buffer(WCWordExtractor * extractor) {
     return 0;
 }
 
+/* construct a WCWordExtractor struct */
 WCWordExtractor * wc_word_extractor_create_with_file(WCFileHandler * handler, WCError * error) {
     if (handler == NULL) {
         *error = WCNullPointerError;
@@ -57,6 +61,7 @@ WCWordExtractor * wc_word_extractor_create_with_file(WCFileHandler * handler, WC
     return extractor;
 }
 
+/* destruct the given WCWordExtractor struct */
 void wc_word_extractor_destroy(WCWordExtractor * extractor, WCError * error) {
     if (extractor == NULL) {
         *error = WCNullPointerError;
@@ -66,6 +71,7 @@ void wc_word_extractor_destroy(WCWordExtractor * extractor, WCError * error) {
     free(extractor);
 }
 
+/* get the next word from text file */
 WCWord * wc_word_extractor_next_word(WCWordExtractor * extractor, WCError * error) {
     if (extractor == NULL) {
         *error = WCNullPointerError;

@@ -1,5 +1,6 @@
 #include "WCHashTable.h"
 
+/* struct definition */
 struct WCHashEntry {
     char * word;
     WCIndex * index;
@@ -13,6 +14,7 @@ struct WCHashTable {
     int unique;
 };
 
+/* static hash function */
 static unsigned int RSHash(const char * str) {
     unsigned int b = 378551;
     unsigned int a = 63689;
@@ -24,6 +26,7 @@ static unsigned int RSHash(const char * str) {
     return (hash & 0x7FFFFFFF);
 }
 
+/* construct a WCHashTable struct */
 WCHashTable * wc_hash_table_create(int size, WCError * error) {
     if (size <= 0) {
         *error = WCIndexRangeError;
@@ -48,6 +51,7 @@ WCHashTable * wc_hash_table_create(int size, WCError * error) {
     return hash;
 }
 
+/* destruct given WCHashTable struct */
 void wc_hash_table_destroy(WCHashTable * hash, WCError * error) {
     if (hash == NULL) {
         *error = WCNullPointerError;
@@ -78,6 +82,7 @@ void wc_hash_table_destroy(WCHashTable * hash, WCError * error) {
     *error = WCNoneError;
 }
 
+/* insert word into hash table */
 void wc_hash_table_insert_word(WCHashTable * hash, WCWord * word, WCError * error) {
     if (hash == NULL || word == NULL) {
         *error = WCNullPointerError;
@@ -139,6 +144,7 @@ void wc_hash_table_insert_word(WCHashTable * hash, WCWord * word, WCError * erro
     *error = WCNoneError;
 }
 
+/* search word in hash table */
 WCIndex * wc_hash_table_search_word(WCHashTable * hash, WCWord * word, WCError * error) {
     if (hash == NULL || word == NULL) {
         *error = WCNullPointerError;
@@ -167,6 +173,7 @@ WCIndex * wc_hash_table_search_word(WCHashTable * hash, WCWord * word, WCError *
     return NULL;
 }
 
+/* delete word in hash table */
 void wc_hash_table_delete_word(WCHashTable * hash, WCWord * word, WCError * error) {
     if (hash == NULL || word == NULL) {
         *error = WCNullPointerError;
@@ -207,12 +214,14 @@ void wc_hash_table_delete_word(WCHashTable * hash, WCWord * word, WCError * erro
     *error = WCNoneError;
 }
 
+/* struct definition */
 struct WCHashTableIterator {
     WCHashTable * hash;
     int index;
     struct WCHashEntry * entry;
 };
 
+/* construct a WCHashTableIterator struct */
 WCHashTableIterator * wc_hash_table_iterator_create(WCHashTable * hash, WCError * error) {
     if (hash == NULL) {
         *error = WCNullPointerError;
@@ -238,6 +247,7 @@ WCHashTableIterator * wc_hash_table_iterator_create(WCHashTable * hash, WCError 
     return NULL;
 }
 
+/* destruct a WCHashTableIterator struct */
 void wc_hash_table_iterator_destroy(WCHashTableIterator * iterator, WCError * error) {
     if (iterator == NULL) {
         *error = WCNullPointerError;
@@ -247,6 +257,7 @@ void wc_hash_table_iterator_destroy(WCHashTableIterator * iterator, WCError * er
     *error = WCNoneError;
 }
 
+/* move iterator to next */
 void wc_hash_table_iterator_next(WCHashTableIterator * iterator, WCError * error) {
     if (iterator == NULL) {
         *error = WCNullPointerError;
@@ -273,6 +284,7 @@ void wc_hash_table_iterator_next(WCHashTableIterator * iterator, WCError * error
     *error = WCIndexRangeError;
 }
 
+/* get value index for current iterator */
 WCIndex * wc_hash_table_iterator_get_index(WCHashTableIterator * iterator, char ** word, WCError * error) {
     if (iterator == NULL || word == NULL) {
         *error = WCNullPointerError;
@@ -283,6 +295,7 @@ WCIndex * wc_hash_table_iterator_get_index(WCHashTableIterator * iterator, char 
     return iterator->entry->index;
 }
 
+/* serializer for WCHashTable struct */
 static void wc_struct_hash_table_serialize(WCHashTable * hash, FILE * fp, WCError * error) {
     if (hash == NULL || fp == NULL) {
         *error = WCNullPointerError;
@@ -294,6 +307,7 @@ static void wc_struct_hash_table_serialize(WCHashTable * hash, FILE * fp, WCErro
     *error = WCNoneError;
 }
 
+/* deserializer for WCHashTable struct */
 static void wc_struct_hash_table_deserialize(WCHashTable * hash, FILE * fp, WCError * error) {
     if (hash == NULL || fp == NULL) {
         *error = WCNullPointerError;
@@ -303,6 +317,7 @@ static void wc_struct_hash_table_deserialize(WCHashTable * hash, FILE * fp, WCEr
     *error = WCNoneError;
 }
 
+/* serializer for WCHashEntry struct */
 static void wc_struct_hash_entry_serialize(struct WCHashEntry * entry, int index, FILE * fp, WCError * error) {
     if (entry == NULL || fp == NULL) {
         *error = WCNullPointerError;
@@ -319,6 +334,7 @@ static void wc_struct_hash_entry_serialize(struct WCHashEntry * entry, int index
     *error = WCNoneError;
 }
 
+/* deserializer for WCHashEntry struct */
 static void wc_struct_hash_entry_deserialize(struct WCHashEntry * entry, FILE * fp, WCError * error) {
     if (entry == NULL || fp == NULL) {
         *error = WCNullPointerError;
@@ -328,6 +344,7 @@ static void wc_struct_hash_entry_deserialize(struct WCHashEntry * entry, FILE * 
     *error = WCNoneError;
 }
 
+/* serialize the whole hash table into a binary file */
 void wc_hash_table_write_to_file(WCHashTable * hash, WCFileHandler * handler, const char * path, WCError * error) {
     if (hash == NULL || handler == NULL || path == NULL) {
         *error = WCNullPointerError;
@@ -382,6 +399,7 @@ void wc_hash_table_write_to_file(WCHashTable * hash, WCFileHandler * handler, co
     *error = WCNoneError;
 }
 
+/* load the hash table from given binary file */
 WCHashTable * wc_hash_table_read_from_file(WCFileHandler * handler, const char * path, WCError * error) {
     if (handler == NULL || path == NULL) {
         *error = WCNullPointerError;
@@ -487,6 +505,7 @@ WCHashTable * wc_hash_table_read_from_file(WCFileHandler * handler, const char *
     return hash;
 }
 
+/* get count from given WCHashTable struct */
 int wc_hash_table_get_count(WCHashTable * hash, WCError * error) {
     if (hash == NULL) {
         *error = WCNullPointerError;
@@ -496,6 +515,7 @@ int wc_hash_table_get_count(WCHashTable * hash, WCError * error) {
     return hash->count;
 }
 
+/* get unique from given WCHashTable struct */
 int wc_hash_table_get_unique(WCHashTable * hash, WCError * error) {
     if (hash == NULL) {
         *error = WCNullPointerError;

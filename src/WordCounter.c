@@ -1,7 +1,9 @@
 #include "WordCounter.h"
 
+/* global wc_clock for timing */
 WCClock * wc_clock = NULL;
 
+/* print the help text */
 static void wc_show_help_text(void) {
     printf("-h				Print this help text and exit\n");
     printf("-d				Use data file(hash table) instead of text file to generate look-up table\n");
@@ -13,18 +15,21 @@ static void wc_show_help_text(void) {
     printf("-t				Print all the words and their positions in text\n");
 }
 
+/* print the traverse header */
 static void wc_print_traverse_header(void) {
     printf(" --------------------------------------- ------------------- ------------------ \n");
     printf("|Word                                   |Row                |Column            |\n");
     printf(" --------------------------------------- ------------------- ------------------ \n");
 }
 
+/* print the search result header */
 static void wc_print_search_result_header(void) {
     printf(" ------------------- ------------------ \n");
     printf("|Row                |Column            |\n");
     printf(" ------------------- ------------------ \n");
 }
 
+/* construct the hash table from data file */
 static WCHashTable * wc_construct_hash_table_from_data(WCFileHandler * handler, const char * path) {
     WCError error;
     WCHashTable * hash = wc_hash_table_read_from_file(handler, path, &error);
@@ -35,6 +40,7 @@ static WCHashTable * wc_construct_hash_table_from_data(WCFileHandler * handler, 
     return hash;
 }
 
+/* save the hash table to data file */
 static void wc_save_hash_table_to_data(WCHashTable * hash, WCFileHandler * handler, const char * path) {
     WCError error;
     char target[strlen(path) + 4];
@@ -47,6 +53,7 @@ static void wc_save_hash_table_to_data(WCHashTable * hash, WCFileHandler * handl
     }
 }
 
+/* construct the hash table from text file */
 static WCHashTable * wc_construct_hash_table_from_text(WCFileHandler * handler, const char * path) {
     WCError error;
 
@@ -122,6 +129,7 @@ static WCHashTable * wc_construct_hash_table_from_text(WCFileHandler * handler, 
     return hash;
 }
 
+/* construct the trie tree from text file */
 static WCTrieTree * wc_construct_trie_tree_from_text(WCFileHandler * handler, const char * path) {
     WCError error;
 
@@ -197,6 +205,7 @@ static WCTrieTree * wc_construct_trie_tree_from_text(WCFileHandler * handler, co
     return trie;
 }
 
+/* wrapper for construct look-up table from text file */
 static void wc_construct_structure_from_text(WCStructType type, WCHashTable ** phash, WCTrieTree ** ptrie, WCFileHandler * handler, const char * path) {
     switch (type) {
         case WCStructTypeHashTable:
@@ -212,6 +221,7 @@ static void wc_construct_structure_from_text(WCStructType type, WCHashTable ** p
     }
 }
 
+/* traverse the hash table through iterator */
 static void wc_hash_table_traverse_wrapper(WCHashTable * hash) {
     WCError error;
     int count;
@@ -275,6 +285,7 @@ static void wc_hash_table_traverse_wrapper(WCHashTable * hash) {
     printf("INFO: Traversal process succeed, %d words in total, %d unique, using %.3lfs in total\n", count, unique, interval);
 }
 
+/* traverse the trie tree through array */
 static void wc_trie_tree_traverse_wrapper(WCTrieTree * trie) {
     WCError error;
     printf("INFO: Starting traverse trie tree...\n");
@@ -318,6 +329,7 @@ static void wc_trie_tree_traverse_wrapper(WCTrieTree * trie) {
     printf("INFO: Traversal process succeed, %d words in total, %d unique, using %.3lfs in total\n", count, unique, interval);
 }
 
+/* wrapper for search certain word in hash table */
 static void wc_hash_table_search_word_wrapper(WCHashTable * hash, WCWord * word) {
     WCError error;
     WCIndexIterator * iterator;
@@ -363,6 +375,7 @@ static void wc_hash_table_search_word_wrapper(WCHashTable * hash, WCWord * word)
     }
 }
 
+/* wrapper for search certain word in trie tree */
 static void wc_trie_tree_search_word_wrapper(WCTrieTree * trie, WCWord * word) {
     WCError error;
     WCIndexIterator * iterator;
@@ -408,6 +421,7 @@ static void wc_trie_tree_search_word_wrapper(WCTrieTree * trie, WCWord * word) {
     }
 }
 
+/* wrapper for search words in look-up tables */
 static void wc_search_word_wrapper(WCStructType type, WCHashTable * hash, WCTrieTree * trie) {
     char input[WC_MAX_INPUT_LENGTH];
     double interval;
@@ -499,7 +513,9 @@ static void wc_search_word_wrapper(WCStructType type, WCHashTable * hash, WCTrie
     }
 }
 
+/* main entry */
 int main(int argc, char *argv[]) {
+    /* variable declarations and definitions */
     int opt = 0;
     char * path = argv[argc - 1];
     char arg_s[WC_MAX_ARGUMENT_LENGTH];
@@ -516,6 +532,7 @@ int main(int argc, char *argv[]) {
 
     printf("WordCounter - MIT License(c) BlackDragon - obsidiandragon2016@gmail.com\n");
 
+    /* initialize the handler */
     WCFileHandler * handler = wc_file_handler_create(&error);
 
     if (error != WCNoneError) {
@@ -523,6 +540,7 @@ int main(int argc, char *argv[]) {
         return (error);
     }
 
+    /* argument parse */
     while ((opt = getopt(argc, argv, "hds:kft")) != -1) {
         switch (opt) {
             case 'h':
@@ -547,17 +565,20 @@ int main(int argc, char *argv[]) {
         }
     }
 
+    /* -h */
     if (h == 1) {
         wc_show_help_text();
         return 0;
     }
 
+    /* initialize the clock */
     wc_clock = wc_clock_create(&error);
     if (error != WCNoneError) {
         printf("FETAL: Failed to create WCClock\n");
         exit(error);
     }
 
+    /* -d */
     if (d == 1) {
         file_type = WCSourceFileTypeData;
         struct_type = WCStructTypeHashTable;
@@ -587,6 +608,7 @@ int main(int argc, char *argv[]) {
             printf("INFO: Constructing process succeed, %d words in total, %d unique, using %.3lfs in total\n", count, unique, interval);
         }
     }
+    /* -s */
     if (s == 1 && d == 0) {
         if(strcmp("hash", arg_s) == 0) {
             struct_type = WCStructTypeHashTable;
@@ -599,6 +621,7 @@ int main(int argc, char *argv[]) {
             struct_type = WCStructTypeBoth;
         }
         wc_construct_structure_from_text(struct_type, &hash, &trie, handler, path);
+        /* -k */
         if (k == 1 && (struct_type == WCStructTypeBoth || struct_type == WCStructTypeHashTable)) {
             printf("INFO: Saving hash table to data file...\n");
             wc_clock_start(wc_clock, &error);
@@ -617,6 +640,7 @@ int main(int argc, char *argv[]) {
             printf("INFO: Saving process succeed, using %.3lfs in total\n", interval);
         }
     }
+    /* -t */
     if (t == 1) {
         switch (struct_type) {
             case WCStructTypeHashTable:
@@ -631,6 +655,7 @@ int main(int argc, char *argv[]) {
                 break;
         }
     }
+    /* -f */
     if (f == 1) {
         wc_search_word_wrapper(struct_type, hash, trie);
     }

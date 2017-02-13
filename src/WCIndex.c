@@ -1,6 +1,6 @@
 #include "WCIndex.h"
 
-
+/* struct definition */
 struct WCIndexNode {
     WCWordInfo info;
     struct WCIndexNode * next;
@@ -12,6 +12,7 @@ struct WCIndex {
     struct WCIndexNode * head;
 };
 
+/* construct a WCIndex struct */
 WCIndex * wc_index_create(WCError * error) {
     WCIndex * index = malloc(sizeof(WCIndex));
     if (index == NULL) {
@@ -32,6 +33,7 @@ WCIndex * wc_index_create(WCError * error) {
     return index;
 }
 
+/* destruct a WCIndex struct */
 void wc_index_destroy(WCIndex * index, WCError * error) {
     if (index == NULL) {
         *error = WCNullPointerError;
@@ -48,6 +50,7 @@ void wc_index_destroy(WCIndex * index, WCError * error) {
     *error = WCNoneError;
 }
 
+/* insert new WCWordInfo into given index */
 void wc_index_add(WCIndex * index, WCWordInfo info, WCError * error) {
     if (index == NULL) {
         *error = WCNullPointerError;
@@ -69,6 +72,7 @@ void wc_index_add(WCIndex * index, WCWordInfo info, WCError * error) {
     *error = WCNoneError;
 }
 
+/* get count from given WCIndex struct */
 int wc_index_get_count(WCIndex * index, WCError * error) {
     if (index == NULL) {
         *error = WCNullPointerError;
@@ -78,10 +82,12 @@ int wc_index_get_count(WCIndex * index, WCError * error) {
     return index->count;
 }
 
+/* struct definition */
 struct WCIndexIterator {
     struct WCIndexNode * iterator;
 };
 
+/* construct a WCIndexIterator struct */
 WCIndexIterator * wc_index_iterator_create(WCIndex * index, WCError * error) {
     if (index == NULL) {
         *error = WCNullPointerError;
@@ -102,6 +108,7 @@ WCIndexIterator * wc_index_iterator_create(WCIndex * index, WCError * error) {
     return iterator;
 }
 
+/* destruct a WCIndexIterator struct */
 void wc_index_iterator_destroy(WCIndexIterator * iterator, WCError * error) {
     if (iterator == NULL) {
         *error = WCNullPointerError;
@@ -111,6 +118,7 @@ void wc_index_iterator_destroy(WCIndexIterator * iterator, WCError * error) {
     *error = WCNoneError;
 }
 
+/* move the iterator to next */
 void wc_index_iterator_next(WCIndexIterator * iterator, WCError * error) {
     if (iterator == NULL) {
         *error = WCNullPointerError;
@@ -124,6 +132,7 @@ void wc_index_iterator_next(WCIndexIterator * iterator, WCError * error) {
     }
 }
 
+/* get the value for current iterator */
 WCWordInfo wc_index_iterator_get_value(WCIndexIterator * iterator, WCError * error) {
     if (iterator == NULL) {
         *error = WCNoneError;
@@ -136,6 +145,7 @@ WCWordInfo wc_index_iterator_get_value(WCIndexIterator * iterator, WCError * err
     return iterator->iterator->info;
 }
 
+/* serializer for WCIndexNode struct */
 static void wc_struct_index_node_serialize(WCIndexNode * node, FILE * fp, WCError * error) {
     if (node == NULL || fp == NULL) {
         *error = WCNullPointerError;
@@ -147,6 +157,7 @@ static void wc_struct_index_node_serialize(WCIndexNode * node, FILE * fp, WCErro
     *error = WCNoneError;
 }
 
+/* serializer for WCIndex struct */
 void wc_struct_index_serialize(WCIndex * index, FILE * fp, WCError * error) {
     if (index == NULL || fp == NULL) {
         *error = WCNullPointerError;
@@ -168,6 +179,7 @@ void wc_struct_index_serialize(WCIndex * index, FILE * fp, WCError * error) {
     *error = WCNoneError;
 }
 
+/* deserializer for WCIndex/WCIndexNode struct */
 WCIndex * wc_struct_index_deserialize(FILE * fp, WCError * error) {
     if (fp == NULL) {
         *error = WCNullPointerError;
