@@ -224,7 +224,7 @@ static void wc_construct_structure_from_text(WCStructType type, WCHashTable ** p
 /* traverse the hash table through iterator */
 static void wc_hash_table_traverse_wrapper(WCHashTable * hash) {
     WCError error;
-    int count;
+    int count = 0;
     printf("INFO: Starting traverse hash table...\n");
     wc_clock_start(wc_clock, &error);
     if (error != WCNoneError) {

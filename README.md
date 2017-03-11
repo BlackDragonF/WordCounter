@@ -6,7 +6,7 @@ This is the course design of Data Structure from Computer Science and Technology
 
 A command-line word counter program based on Trie Tree and Hash Table.
 
-The author of this program - BlackDragon - is an undergraduate of HUST. 
+The author of this program - BlackDragon - is an undergraduate of HUST from Computer Science and Technology Department. 
 
 Any discussion/suggestion/issues/pull requests is welcomed, but you SHOULD NOT COPY the codes directly if you are facing the same/similar course design/experiment. After all, copying the codes won't make you stronger :)
 

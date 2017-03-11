@@ -12,7 +12,7 @@ MKDIR = mkdir
 SRCS = $(wildcard ${SRC_DIR}/*.c)
 OBJS = $(patsubst %.c, ${OBJ_DIR}/%.o, $(notdir ${SRCS}))
 HEADERS = $(wildcard ${INC_DIR}/*.h)
-TARGET = $(BIN_DIR)/WordCounter
+TARGET = $(BIN_DIR)/wordcounter
 
 all : $(DIRS) $(TARGET)
 
